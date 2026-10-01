@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TerraMind Solutions - Panel de Optimización</title>
+    <style>
+        :root {
+            /* Paleta inspirada en la naturaleza: tonos tierra y verdes orgánicos */
+            --bg-color: #F4F1EA;
+            --surface-color: #FFFFFF;
+            --text-primary: #1A2F1D;
+            --text-secondary: #4A5D4E;
+            --green-primary: #2C5E3B;
+            --green-light: #4E8752;
+            --earth-accent: #8B6B4A;
+            --alert-red: #9B3838;
+            --border-radius: 12px;
+            --shadow: 0 4px 20px rgba(44, 94, 59, 0.08);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            line-height: 1.6;
+            padding: 2rem;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 1000px;
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .header-span {
+            grid-column: 1 / -1;
+            margin-bottom: 1rem;
+        }
+
+        h1 {
+            color: var(--green-primary);
+            font-size: 1.8rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        p.subtitle {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .card {
+            background-color: var(--surface-color);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(139, 107, 74, 0.15);
+        }
+
+        h2 {
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+            color: var(--green-primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+
+        label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 0.4rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        input {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 1px solid #D1CDC4;
+            border-radius: 8px;
+            font-size: 1rem;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--green-light);
+            box-shadow: 0 0 0 3px rgba(78, 135, 82, 0.2);
+        }
+
+        button {
+            width: 100%;
+            padding: 1rem;
+            background-color: var(--green-primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-top: 1rem;
+        }
+
+        button:hover {
+            background-color: var(--green-light);
+        }
+
+        /* Sección de Resultados */
+        .results-section {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .result-box {
+            padding: 1.5rem;
+            border-radius: 8px;
+            background-color: var(--bg-color);
+            border-left: 4px solid var(--green-primary);
+        }
+
+        .result-box.alert {
+            border-left-color: var(--alert-red);
+            background-color: rgba(155, 56, 56, 0.05);
+        }
+
+        .result-box.optimal {
+            border-left-color: var(--green-light);
+            background-color: rgba(78, 135, 82, 0.05);
+        }
+
+        .result-title {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+        }
+
+        .result-value {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .result-detail {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-top: 0.2rem;
+        }
+
+        #dashboard-results {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header-span">
+            <h1>TerraMind Solutions</h1>
+            <p class="subtitle">Mayordomía agrícola. Optimización de recursos hídricos mediante inteligencia de datos.</p>
+        </div>
+
+        <!-- Entrada de Sensores IoT -->
+        <div class="card">
+            <h2>Datos de Sensores IoT (Simulación)</h2>
+            <form id="iot-form">
+                <div class="form-group">
+                    <label for="humedad">Humedad del Suelo (%)</label>
+                    <input type="number" id="humedad" min="0" max="100" placeholder="Ej. 35" required>
+                </div>
+                <div class="form-group">
+                    <label for="temperatura">Temperatura Ambiental (°C)</label>
+                    <input type="number" id="temperatura" min="-10" max="60" placeholder="Ej. 28" required>
+                </div>
+                <div class="form-group">
+                    <label for="evapotranspiracion">Evapotranspiración (mm/día)</label>
+                    <input type="number" id="evapotranspiracion" min="0" step="0.1" placeholder="Ej. 5.2" required>
+                </div>
+                <div class="form-group">
+                    <label for="densidad">Densidad de Raíces (Índice 1-10)</label>
+                    <input type="number" id="densidad" min="1" max="10" placeholder="Ej. 7" required>
+                </div>
+                <button type="submit">Procesar Modelo Predictivo</button>
+            </form>
+        </div>
+
+        <!-- Salida: Recomendaciones, Alertas y Reportes -->
+        <div class="results-section" id="dashboard-results">
+            
+            <div class="card" style="padding-bottom: 1rem;">
+                <h2>Análisis del Algoritmo</h2>
+                
+                <!-- Alertas -->
+                <div id="alerta-box" class="result-box">
+                    <div class="result-title">Estado de la Parcela</div>
+                    <div id="alerta-texto" class="result-value">Análisis en progreso...</div>
+                </div>
+
+                <!-- Recomendación de Riego -->
+                <div id="riego-box" class="result-box" style="margin-top: 1rem;">
+                    <div class="result-title">Recomendación de Riego</div>
+                    <div id="riego-valor" class="result-value">-</div>
+                    <div id="riego-detalle" class="result-detail">-</div>
+                </div>
+
+                <!-- Reportes de Rendimiento -->
+                <div class="result-box" style="margin-top: 1rem; border-left-color: var(--earth-accent);">
+                    <div class="result-title">Proyección de Rendimiento</div>
+                    <div id="rendimiento-valor" class="result-value">-</div>
+                    <div id="rendimiento-detalle" class="result-detail">Estimación basada en estrés hídrico actual.</div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('iot-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // 1. Recolección de Datos de Entrada
+            const humedad = parseFloat(document.getElementById('humedad').value);
+            const temperatura = parseFloat(document.getElementById('temperatura').value);
+            const evapo = parseFloat(document.getElementById('evapotranspiracion').value);
+            const densidad = parseFloat(document.getElementById('densidad').value);
+
+            // Variables de salida
+            let alertaEstado = "";
+            let claseAlerta = "optimal";
+            let recomendacionRiego = 0;
+            let justificacion = "";
+            let rendimientoBase = 12.5; // Toneladas por hectárea óptimas (Ej. Maíz)
+
+            // 2. Procesamiento Lógico (Simulación de Aprendizaje Profundo)
+            
+            // Lógica de Alertas
+            if (humedad < 30) {
+                alertaEstado = "ESTRÉS HÍDRICO CRÍTICO";
+                claseAlerta = "alert";
+                rendimientoBase -= 3.5; // Penalización severa por estrés
+            } else if (humedad >= 30 && humedad < 50) {
+                alertaEstado = "Déficit Hídrico Moderado";
+                claseAlerta = "alert";
+                rendimientoBase -= 1.2; 
+            } else if (humedad > 85) {
+                alertaEstado = "Peligro de Asfixia Radicular (Exceso)";
+                claseAlerta = "alert";
+                rendimientoBase -= 2.0;
+            } else {
+                alertaEstado = "Condiciones Óptimas de Humedad";
+                claseAlerta = "optimal";
+            }
+
+            // Agravar alerta por alta temperatura
+            if (temperatura > 32 && humedad < 50) {
+                alertaEstado += " + Riesgo por Ola de Calor";
+                rendimientoBase -= 1.0;
+            }
+
+            // Lógica de Recomendación de Riego (Cuándo y Cuánto)
+            // Humedad óptima objetivo: 65%
+            const humedadObjetivo = 65;
+            
+            if (humedad < 55) {
+                // Cálculo de mm de agua necesarios: 
+                // Diferencia de humedad ajustada por la tasa de evaporación y capacidad de la raíz
+                const deficit = humedadObjetivo - humedad;
+                const factorRaiz = densidad / 10; // Convierte índice 1-10 a porcentaje decimal
+                
+                // Fórmula de simulación
+                recomendacionRiego = Math.round((deficit * 0.8) + (evapo * 1.5) * (2 - factorRaiz));
+                
+                justificacion = `Ejecutar riego hoy. El suelo requiere restaurar el déficit del ${deficit}% compensando una pérdida de ${evapo}mm/día.`;
+            } else {
+                recomendacionRiego = 0;
+                justificacion = "No regar. El suelo posee suficiente reserva hídrica. Aplicar agua ahora constituiría un desperdicio del recurso.";
+            }
+
+            // 3. Renderizado de Salidas en la UI
+            const dashboard = document.getElementById('dashboard-results');
+            const alertaBox = document.getElementById('alerta-box');
+            
+            // Actualizar Alerta
+            alertaBox.className = `result-box ${claseAlerta}`;
+            document.getElementById('alerta-texto').textContent = alertaEstado;
+
+            // Actualizar Riego
+            const riegoBox = document.getElementById('riego-box');
+            if (recomendacionRiego > 0) {
+                riegoBox.className = "result-box alert"; // Requiere acción
+                document.getElementById('riego-valor').textContent = `${recomendacionRiego} mm de lámina de agua`;
+            } else {
+                riegoBox.className = "result-box optimal"; // Óptimo, no hacer nada
+                document.getElementById('riego-valor').textContent = `0 mm (No requiere riego)`;
+            }
+            document.getElementById('riego-detalle').textContent = justificacion;
+
+            // Actualizar Rendimiento
+            document.getElementById('rendimiento-valor').textContent = `${rendimientoBase.toFixed(1)} ton/ha`;
+            
+            // Mostrar panel con animación
+            dashboard.style.display = 'flex';
+        });
+    </script>
+</body>
+</html>
